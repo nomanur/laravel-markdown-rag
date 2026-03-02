@@ -29,6 +29,6 @@ Route::get('vector-embedding', function() {
     return view('laravel-markdown-rag::vector-embedding', ['data' => $data]);
 })->middleware(['auth', 'verified'])->name('vector-embedding');
 
-Route::get('/without-flux', function () {
+Route::get('/markdownrag', function () {
     return view('without-flux');
-})->name('without-flux');
+})->name('markdownrag');

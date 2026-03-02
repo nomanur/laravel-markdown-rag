@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class MarkdownRouteCommand extends Command
 {
-    protected $signature = 'markdown:route';
+    protected $signature = 'markdownrag:route';
 
     protected $description = 'Generate markdown routes';
 
