@@ -1,9 +1,3 @@
-<?php
-
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Nomanurrahman\Http\Livewire\RagChat;
-
 Route::get('vector-embedding', function() {
     set_time_limit(120); // Increase timeout for t-SNE
 
@@ -21,7 +15,7 @@ Route::get('vector-embedding', function() {
         return [
             'x' => $reduced[$index][0],
             'y' => $reduced[$index][1],
-            'text' => Str::limit($chunk->content, 200),
+            'text' => Illuminate\Support\Str::limit($chunk->content, 200),
             'source' => $chunk->source,
         ];
     })->toArray();
