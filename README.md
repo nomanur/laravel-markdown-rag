@@ -39,7 +39,6 @@ AI_DEFAULT_PROVIDER=gemini
 MARKDOWN_CHAT_RATE_LIMIT=2 (optional) //if u want to rate the limit for the chat
 ```
 
-```markdown
 To use the configuration, update the code in `config/ai.php` with:
 
 ```php
