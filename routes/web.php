@@ -25,4 +25,4 @@ Route::get('vector-embedding', function() {
 
 Route::get('/markdownrag', function () {
     return view('without-flux');
-})->name('markdownrag');
+})->middleware(['auth'])->name('markdownrag');
