@@ -39,6 +39,19 @@ AI_DEFAULT_PROVIDER=gemini
 MARKDOWN_CHAT_RATE_LIMIT=2 (optional) //if u want to rate the limit for the chat
 ```
 
+```markdown
+To use the configuration, update the code in `config/ai.php` with:
+
+```php
+'default' => env('AI_DEFAULT_PROVIDER', 'ollama'),
+'default_for_images' => env('AI_IMAGE_PROVIDER', 'gemini'),
+'default_for_audio' => env('AI_AUDIO_PROVIDER', 'openai'),
+'default_for_transcription' => env('AI_TRANSCRIPTION_PROVIDER', 'openai'),
+'default_for_embeddings' => env('AI_EMBEDDING_PROVIDER', 'openai'),
+'default_for_reranking' => 'cohere',
+```
+```
+
 ## Usage
 
 ### 1. Register Routes
