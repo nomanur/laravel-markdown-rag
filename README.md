@@ -1,4 +1,3 @@
-```markdown
 # Laravel Markdown RAG
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nomanurrahman/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanurrahman/laravel-markdown-rag)
