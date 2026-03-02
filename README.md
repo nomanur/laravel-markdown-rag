@@ -18,7 +18,7 @@ composer require nomanurrahman/laravel-markdown-rag
 Publish the package assets and configuration:
 
 ```bash
-php artisan vendor:publish --provider="Nomanurrahman\LaravelMarkdownRag\LaravelMarkdownRagServiceProvider"
+php artisan vendor:publish --provider="Nomanurrahman\LaravelMarkdownRagServiceProvider"
 ```
 
 Run the migrations:
