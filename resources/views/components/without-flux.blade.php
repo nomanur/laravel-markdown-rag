@@ -30,7 +30,6 @@ new class extends Component
         $this->messages = History::where('user_id', $user->id)
             ->where('agent', 'knowledge')
             ->latest()
-            ->limit(50)
             ->get()
             ->reverse()
             ->values()
@@ -143,7 +142,7 @@ new class extends Component
                 >
                     <div class="rt-message-bubble">
                         @if ($message['role'] === 'assistant')
-                            <div x-data="{ content: @js($message['content']) }" x-init="$el.innerHTML = marked.parse(content)" class="rt-prose"></div>
+                            <div x-data="{ content: @js($message['content']) }" x-html="marked.parse(content)" class="rt-prose"></div>
                         @else
                             <p>{{ $message['content'] }}</p>
                         @endif
