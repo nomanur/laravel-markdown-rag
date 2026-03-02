@@ -2,6 +2,11 @@
     "name": "nomanurrahman/laravel-markdown-rag",
     "description": "Transform Markdown files into AI-ready context with smart chunking and RAG capabilities for Laravel",
     "keywords": [
+        "laravel",
+        "markdown",
+        "rag",
+        "ai",
+        "php",
         "nomanurrahman",
         "laravel-markdown-rag"
     ],
