@@ -49,7 +49,6 @@ To use the configuration, update the code in `config/ai.php` with:
 'default_for_embeddings' => env('AI_EMBEDDING_PROVIDER', 'openai'),
 'default_for_reranking' => 'cohere',
 ```
-```
 
 ## Usage
 
