@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nomanurrahman/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanurrahman/laravel-markdown-rag)
 [![Total Downloads](https://img.shields.io/packagist/dt/nomanurrahman/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanurrahman/laravel-markdown-rag)
-![GitHub Actions](https://github.com/nomanurrahman/laravel-markdown-rag/actions/workflows/main.yml/badge.svg)
 
 Laravel Markdown RAG is a package that allows you to build a Retrieval-Augmented Generation (RAG) system using Markdown files as your knowledge base, powered by Gemini AI.
 
