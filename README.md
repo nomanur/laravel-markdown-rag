@@ -88,4 +88,3 @@ If you discover any security related issues, please email nomanurrahman@gmail.co
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-```
