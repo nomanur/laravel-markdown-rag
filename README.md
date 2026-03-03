@@ -17,6 +17,7 @@ Publish the package assets and configuration:
 
 ```bash
 php artisan vendor:publish --provider="Nomanur\LaravelMarkdownRAGServiceProvider"
+php artisan vendor:publish --provider="Laravel\Ai\AiServiceProvider"
 ```
 
 Run the migrations:
