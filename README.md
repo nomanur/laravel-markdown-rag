@@ -1,7 +1,7 @@
 # Laravel Markdown RAG
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/nomanurrahman/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanurrahman/laravel-markdown-rag)
-[![Total Downloads](https://img.shields.io/packagist/dt/nomanurrahman/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanurrahman/laravel-markdown-rag)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/nomanur/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanur/laravel-markdown-rag)
+[![Total Downloads](https://img.shields.io/packagist/dt/nomanur/laravel-markdown-rag.svg?style=flat-square)](https://packagist.org/packages/nomanur/laravel-markdown-rag)
 
 Laravel Markdown RAG is a package that allows you to build a Retrieval-Augmented Generation (RAG) system using Markdown files as your knowledge base, powered by Gemini AI.
 
@@ -10,13 +10,13 @@ Laravel Markdown RAG is a package that allows you to build a Retrieval-Augmented
 You can install the package via composer:
 
 ```bash
-composer require nomanurrahman/laravel-markdown-rag
+composer require nomanur/laravel-markdown-rag
 ```
 
 Publish the package assets and configuration:
 
 ```bash
-php artisan vendor:publish --provider="Nomanurrahman\LaravelMarkdownRagServiceProvider"
+php artisan vendor:publish --provider="Nomanur\LaravelMarkdownRAGServiceProvider"
 ```
 
 Run the migrations:
@@ -91,7 +91,7 @@ If you discover any security related issues, please email nomanurrahman@gmail.co
 
 ## Credits
 
-- [nomanur rahman](https://github.com/nomanurrahman)
+- [nomanur rahman](https://github.com/nomanur)
 - [All Contributors](../../contributors)
 
 ## License

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanurrahman\Console\Commands;
+namespace Nomanur\Console\Commands;
 
 use Illuminate\Console\Command;
 

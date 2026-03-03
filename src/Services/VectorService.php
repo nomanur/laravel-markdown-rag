@@ -1,8 +1,8 @@
 <?php
 
-namespace Nomanurrahman\Services;
+namespace Nomanur\Services;
 
-use Nomanurrahman\Models\KnowledgeChunk;
+use Nomanur\Models\KnowledgeChunk;
 use Laravel\Ai\Embeddings;
 
 class VectorService

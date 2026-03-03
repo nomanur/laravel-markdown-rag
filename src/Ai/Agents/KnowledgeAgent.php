@@ -1,14 +1,14 @@
 <?php
 
-namespace Nomanurrahman\Ai\Agents;
+namespace Nomanur\Ai\Agents;
 
 use Stringable;
 use App\Models\User;
-use Nomanurrahman\Models\History;
+use Nomanur\Models\History;
 use Laravel\Ai\Promptable;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Messages\Message;
-use Nomanurrahman\Ai\Tools\KnowledgeSearchTool;
+use Nomanur\Ai\Tools\KnowledgeSearchTool;
 use Laravel\Ai\Contracts\HasTools;
 use Laravel\Ai\Contracts\Conversational;
 

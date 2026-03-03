@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanurrahman\Services;
+namespace Nomanur\Services;
 
 class TextSplitter
 {

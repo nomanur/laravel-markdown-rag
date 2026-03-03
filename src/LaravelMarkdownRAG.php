@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanurrahman;
+namespace Nomanur;
 
 class LaravelMarkdownRAG
 {

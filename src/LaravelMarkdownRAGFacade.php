@@ -1,11 +1,11 @@
 <?php
 
-namespace Nomanurrahman;
+namespace Nomanur;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Nomanurrahman\LaravelMarkdownRAG\LaravelMarkdownRAG
+ * @see \Nomanur\LaravelMarkdownRAG\LaravelMarkdownRAG
  */
 class LaravelMarkdownRAGFacade extends Facade
 {

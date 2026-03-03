@@ -1,12 +1,12 @@
 <?php
 
-namespace Nomanurrahman;
+namespace Nomanur;
 
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use Nomanurrahman\Console\Commands\KnowledgeIndexCommand;
-use Nomanurrahman\Console\Commands\MarkdownRouteCommand;
-use Nomanurrahman\Http\Livewire\RagChat;
+use Nomanur\Console\Commands\KnowledgeIndexCommand;
+use Nomanur\Console\Commands\MarkdownRouteCommand;
+use Nomanur\Http\Livewire\RagChat;
 
 class LaravelMarkdownRAGServiceProvider extends ServiceProvider
 {

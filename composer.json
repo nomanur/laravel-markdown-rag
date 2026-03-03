@@ -1,5 +1,5 @@
 {
-    "name": "nomanurrahman/laravel-markdown-rag",
+    "name": "nomanur/laravel-markdown-rag",
     "description": "Transform Markdown files into AI-ready context with smart chunking and RAG capabilities for Laravel",
     "keywords": [
         "laravel",
@@ -7,10 +7,10 @@
         "rag",
         "ai",
         "php",
-        "nomanurrahman",
+        "nomanur",
         "laravel-markdown-rag"
     ],
-    "homepage": "https://github.com/nomanurrahman/laravel-markdown-rag",
+    "homepage": "https://github.com/nomanur/laravel-markdown-rag",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Nomanurrahman\\": "src"
+            "Nomanur\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Nomanurrahman\\Tests\\": "tests"
+            "Nomanur\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -51,10 +51,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Nomanurrahman\\LaravelMarkdownRAGServiceProvider"
+                "Nomanur\\LaravelMarkdownRAGServiceProvider"
             ],
             "aliases": {
-                "LaravelMarkdownRAG": "Nomanurrahman\\LaravelMarkdownRAGFacade"
+                "LaravelMarkdownRAG": "Nomanur\\LaravelMarkdownRAGFacade"
             }
         }
     }

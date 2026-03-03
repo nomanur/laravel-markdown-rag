@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanurrahman\Services;
+namespace Nomanur\Services;
 
 /**
  * A simple port of t-SNE algorithm to PHP.

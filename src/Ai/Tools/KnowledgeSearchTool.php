@@ -1,12 +1,12 @@
 <?php
 
-namespace Nomanurrahman\Ai\Tools;
+namespace Nomanur\Ai\Tools;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 use Stringable;
-use Nomanurrahman\Services\VectorService;
+use Nomanur\Services\VectorService;
 
 class KnowledgeSearchTool implements Tool
 {

@@ -123,8 +123,8 @@ class ComposerStaticInitcbb6091294dc84c8e733f02ea122905f
         'N' =>
         array (
             'NunoMaduro\\Collision\\' => 21,
-            'Nomanurrahman\\Tests\\' => 20,
-            'Nomanurrahman\\' => 14,
+            'Nomanur\\Tests\\' => 14,
+            'Nomanur\\' => 8,
             'Nette\\' => 6,
         ),
         'M' =>
@@ -395,11 +395,11 @@ class ComposerStaticInitcbb6091294dc84c8e733f02ea122905f
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
         ),
-        'Nomanurrahman\\Tests\\' =>
+        'Nomanur\\Tests\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Nomanurrahman\\' =>
+        'Nomanur\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

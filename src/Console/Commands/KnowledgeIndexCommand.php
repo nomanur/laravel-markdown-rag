@@ -1,9 +1,9 @@
 <?php
 
-namespace Nomanurrahman\Console\Commands;
+namespace Nomanur\Console\Commands;
 
 use Illuminate\Console\Command;
-use Nomanurrahman\Services\VectorService;
+use Nomanur\Services\VectorService;
 use Illuminate\Support\Facades\File;
 
 class KnowledgeIndexCommand extends Command
@@ -29,7 +29,7 @@ class KnowledgeIndexCommand extends Command
     {
         if ($this->option('clear')) {
             $this->info('Clearing existing knowledge chunks...');
-            \Nomanurrahman\Models\KnowledgeChunk::truncate();
+            \Nomanur\Models\KnowledgeChunk::truncate();
         }
 
         $this->info('Starting knowledge base indexing...');

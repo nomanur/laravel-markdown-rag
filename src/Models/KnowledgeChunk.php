@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanurrahman\Models;
+namespace Nomanur\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
