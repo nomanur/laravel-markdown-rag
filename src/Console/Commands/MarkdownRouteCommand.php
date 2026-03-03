@@ -22,8 +22,8 @@ class MarkdownRouteCommand extends Command
         $this->components->info('Exporting backend...');
 
         file_put_contents(
-            base_path('routes/web.stub.php'), 
-            file_get_contents(__DIR__ . '/../../../routes/web.php'),
+            base_path('routes/web.php'), 
+            file_get_contents(__DIR__ . '/../../../routes/web.stub.php'),
             FILE_APPEND);
         
         $this->components->info('Backend exported successfully!');
