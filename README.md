@@ -60,6 +60,20 @@ php artisan markdownrag:route
 ### 2. Setup Knowledge Base
 Create a folder for your markdown files within the `public` directory (e.g., `public/knowledge-base`) and add your `.md` files there.
 
+Example:
+```
+public/
+└── knowledge-base/
+    ├── company/
+    │   ├── file1.md
+    │   ├── file2.md
+    │   └── file3.md
+    └── product/
+        ├── file1.md
+        ├── file2.md
+        └── file3.md
+```
+
 ### 3. Indexing
 Index your markdown files to make them searchable:
 
