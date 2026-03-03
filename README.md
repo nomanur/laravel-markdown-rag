@@ -35,8 +35,11 @@ GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash
 AI_EMBEDDING_PROVIDER=gemini
 AI_DEFAULT_PROVIDER=gemini
-MARKDOWN_CHAT_RATE_LIMIT=2 (optional) //if u want to rate the limit for the chat
+MARKDOWN_INFO_PATH=knowledge-base
 ```
+
+- `MARKDOWN_CHAT_RATE_LIMIT`: 5 (optional) if you want to rate the limit for the chat.
+- `MARKDOWN_INFO_PATH`: (optional) the path to the markdown files in the public directory.
 
 To use the configuration, update the code in `config/ai.php` with:
 
@@ -59,7 +62,7 @@ php artisan markdownrag:route
 ```
 
 ### 2. Setup Knowledge Base
-Create a folder for your markdown files within the `public` directory (e.g., `public/knowledge-base`) and add your `.md` files there.
+Create a folder for your markdown files within the `public` directory. By default, this is `public/knowledge-base`, but you can change it using the `MARKDOWN_INFO_PATH` environment variable. Add your `.md` files there.
 
 Example:
 ```

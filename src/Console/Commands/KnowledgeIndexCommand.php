@@ -34,7 +34,7 @@ class KnowledgeIndexCommand extends Command
 
         $this->info('Starting knowledge base indexing...');
 
-        $knowledgePath = public_path('knowledge-base');
+        $knowledgePath = public_path(config('laravel-markdown-rag.markdown_info_path', 'knowledge-base'));
         
         if (!File::exists($knowledgePath)) {
             $this->error("Knowledge base path not found: {$knowledgePath}");
