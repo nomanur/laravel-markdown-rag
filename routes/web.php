@@ -1,14 +1,14 @@
 Route::get('vector-embedding', function() {
     set_time_limit(120); // Increase timeout for t-SNE
 
-    $chunks = \Nomanurrahman\Models\KnowledgeChunk::latest()->limit(100)->get();
+    $chunks = \Nomanur\Models\KnowledgeChunk::latest()->limit(100)->get();
     
     if ($chunks->isEmpty()) {
         return view('laravel-markdown-rag::vector-embedding', ['data' => []]);
     }
 
     $embeddings = $chunks->pluck('embedding')->toArray();
-    $vectorService = new \Nomanurrahman\Services\VectorService();
+    $vectorService = new \Nomanur\Services\VectorService();
     $reduced = $vectorService->reduceDimensions($embeddings);
 
     $data = $chunks->map(function($chunk, $index) use ($reduced) {

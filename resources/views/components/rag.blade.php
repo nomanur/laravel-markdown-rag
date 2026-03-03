@@ -1,8 +1,8 @@
 <?php
 
 use Livewire\Component;
-use Nomanurrahman\Ai\Agents\KnowledgeAgent;
-use Nomanurrahman\Models\History;
+use Nomanur\Ai\Agents\KnowledgeAgent;
+use Nomanur\Models\History;
 use Illuminate\Support\Facades\Log;
 
 new class extends Component
