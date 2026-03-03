@@ -14,6 +14,7 @@
     x-on:message-sent.window="scrollToBottom()"
 >
     <!-- Chat Card -->
+    <div class="rt-chat-card">
         <!-- Header -->
         <header class="rt-chat-header">
             <div class="rt-header-info">
