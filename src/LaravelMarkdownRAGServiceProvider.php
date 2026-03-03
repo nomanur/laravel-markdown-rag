@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Nomanur\Console\Commands\KnowledgeIndexCommand;
 use Nomanur\Console\Commands\MarkdownRouteCommand;
+use Nomanur\Livewire\WithoutFlux;
+use Nomanur\Livewire\RagChat;
 
 class LaravelMarkdownRAGServiceProvider extends ServiceProvider
 {
@@ -19,10 +21,8 @@ class LaravelMarkdownRAGServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         if (class_exists(Livewire::class)) {
-            // Livewire 3/4 handles anonymous components in resources/views/components/ automatically
-            // But we can register aliases if we want specific names
-            Livewire::component('rag-chat', 'laravel-markdown-rag::components.rag');
-            Livewire::component('without-flux', 'laravel-markdown-rag::components.without-flux');
+            Livewire::component('rag-chat', RagChat::class);
+            Livewire::component('without-flux', WithoutFlux::class);
         }
 
         if ($this->app->runningInConsole()) {
@@ -53,6 +53,11 @@ class LaravelMarkdownRAGServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/Database/migrations' => database_path('migrations'),
             ], 'migrations');
+
+            $this->publishes([
+                __DIR__.'/Livewire/WithoutFlux.php.stub' => app_path('Http/Livewire/WithoutFlux.php'),
+                __DIR__.'/Livewire/RagChat.php.stub' => app_path('Http/Livewire/RagChat.php'),
+            ], 'livewire-components');
 
             $this->commands([
                 KnowledgeIndexCommand::class,
