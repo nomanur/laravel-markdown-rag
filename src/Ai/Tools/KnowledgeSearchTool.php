@@ -28,11 +28,23 @@ class KnowledgeSearchTool implements Tool
             return 'Please provide a search query.';
         }
 
+        $rerankingEnabled = config('laravel-markdown-rag.markdown_reranking', false);
+        $limit = $rerankingEnabled ? 10 : 3;
+
         $vectorService = app(VectorService::class);
-        $results = $vectorService->search($query, 3);
+        $results = $vectorService->search($query, $limit);
 
         if ($results->isEmpty()) {
             return 'No relevant information found in the knowledge base.';
+        }
+
+        if ($rerankingEnabled) {
+            \Illuminate\Support\Facades\Log::info('KnowledgeSearchTool: Reranking is ENABLED. Fetching ' . $results->count() . ' results for reranking.');
+            $rerankService = app(\Nomanur\Services\RerankService::class);
+            $results = $rerankService->rerank($query, $results)->take(3);
+            \Illuminate\Support\Facades\Log::info('KnowledgeSearchTool: Reranking complete. Top 3 results selected.');
+        } else {
+            \Illuminate\Support\Facades\Log::info('KnowledgeSearchTool: Reranking is DISABLED.');
         }
 
         $formatted = $results->map(function ($result) {

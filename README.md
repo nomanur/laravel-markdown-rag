@@ -46,7 +46,7 @@ To use the configuration, update the code in `config/ai.php` with:
 'default_for_audio' => env('AI_AUDIO_PROVIDER', 'openai'),
 'default_for_transcription' => env('AI_TRANSCRIPTION_PROVIDER', 'openai'),
 'default_for_embeddings' => env('AI_EMBEDDING_PROVIDER', 'openai'),
-'default_for_reranking' => 'cohere',
+'default_for_reranking' => env('AI_RERANKING_PROVIDER', 'cohere'),
 ```
 
 ## Usage
