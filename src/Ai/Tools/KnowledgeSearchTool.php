@@ -3,6 +3,7 @@
 namespace Nomanur\Ai\Tools;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 use Stringable;
@@ -10,6 +11,8 @@ use Nomanur\Services\VectorService;
 
 class KnowledgeSearchTool implements Tool
 {
+    public function __construct(protected ?\App\Models\User $user = null) {}
+
     public function description(): Stringable|string
     {
         return 'Search the internal knowledge base for information about the company, products, employees, and contracts.';
@@ -26,6 +29,18 @@ class KnowledgeSearchTool implements Tool
         
         if (empty($query)) {
             return 'Please provide a search query.';
+        }
+
+        $queryRewriteEnabled = config('laravel-markdown-rag.markdown_query_rewrite', false);
+        if ($queryRewriteEnabled && $this->user) {
+            $rewriteService = app(\Nomanur\Services\QueryRewriteService::class);
+            $newQuery = $rewriteService->rewrite($query, $this->user);
+            Log::alert($newQuery);
+            \Illuminate\Support\Facades\Log::info('KnowledgeSearchTool: Query rewritten', [
+                'from' => $query,
+                'to' => $newQuery
+            ]);
+            $query = $newQuery;
         }
 
         $rerankingEnabled = config('laravel-markdown-rag.markdown_reranking', false);

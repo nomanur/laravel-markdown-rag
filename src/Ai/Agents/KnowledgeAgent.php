@@ -59,7 +59,7 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     public function tools(): iterable
     {
         return [
-            new KnowledgeSearchTool(),
+            new KnowledgeSearchTool($this->user),
         ];
     }
 }
