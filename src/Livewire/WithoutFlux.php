@@ -1,6 +1,6 @@
 <?php
 
-namespace Nomanur\Livewire;
+namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Nomanur\Ai\Agents\KnowledgeAgent;
