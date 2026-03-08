@@ -39,18 +39,32 @@ Follow-up: {$query}
 Standalone Query:
 EOT;
 
-        try {
-            $rewrittenQuery = (string) Ai::prompt($prompt);
-            
-            Log::info('QueryRewriteService: Rewriting query', [
-                'original' => $query,
-                'rewritten' => $rewrittenQuery
-            ]);
+        $maxAttempts = config('laravel-markdown-rag.markdown_ai_retry_max_attempts', 3);
+        $attempt = 1;
 
-            return trim($rewrittenQuery);
-        } catch (\Exception $e) {
-            Log::error('QueryRewriteService: Error rewriting query', ['error' => $e->getMessage()]);
-            return $query;
+        while ($attempt <= $maxAttempts) {
+            try {
+                $rewrittenQuery = (string) Ai::prompt($prompt);
+                
+                Log::info('QueryRewriteService: Rewriting query', [
+                    'original' => $query,
+                    'rewritten' => $rewrittenQuery
+                ]);
+
+                return trim($rewrittenQuery);
+            } catch (\Exception $e) {
+                if ($attempt === $maxAttempts || !str_contains(strtolower($e->getMessage()), 'rate limit')) {
+                    Log::error('QueryRewriteService: Error rewriting query', ['error' => $e->getMessage()]);
+                    return $query;
+                }
+
+                $delay = pow(2, $attempt);
+                Log::warning("QueryRewriteService: AI provider rate limited. Retrying in {$delay} seconds... (Attempt {$attempt}/{$maxAttempts})");
+                sleep($delay);
+                $attempt++;
+            }
         }
+
+        return $query;
     }
 }

@@ -49,7 +49,27 @@ EOT;
 
         // Using Laravel\Ai\Promptable trait capabilities
         $prompt = $systemPrompt . "\n\n" . $userPrompt;
-        $response = (string) $this->prompt($prompt);
+        
+        $maxAttempts = config('laravel-markdown-rag.markdown_ai_retry_max_attempts', 3);
+        $attempt = 1;
+        $response = '';
+
+        while ($attempt <= $maxAttempts) {
+            try {
+                $response = (string) $this->prompt($prompt);
+                break;
+            } catch (\Exception $e) {
+                if ($attempt === $maxAttempts || !str_contains(strtolower($e->getMessage()), 'rate limit')) {
+                    \Illuminate\Support\Facades\Log::error('RerankService: Error prompting AI', ['error' => $e->getMessage()]);
+                    return $chunks;
+                }
+
+                $delay = pow(2, $attempt);
+                \Illuminate\Support\Facades\Log::warning("RerankService: AI provider rate limited. Retrying in {$delay} seconds... (Attempt {$attempt}/{$maxAttempts})");
+                sleep($delay);
+                $attempt++;
+            }
+        }
 
         \Illuminate\Support\Facades\Log::info('RerankService: Raw LLM response: ' . $response);
 

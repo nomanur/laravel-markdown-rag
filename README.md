@@ -36,10 +36,14 @@ GEMINI_MODEL=gemini-2.5-flash
 AI_EMBEDDING_PROVIDER=gemini
 AI_DEFAULT_PROVIDER=gemini
 MARKDOWN_INFO_PATH=knowledge-base
+MARKDOWN_EMBEDDING_BATCH_SIZE=50
+MARKDOWN_AI_RETRY_MAX_ATTEMPTS=3
 ```
 
 - `MARKDOWN_CHAT_RATE_LIMIT`: 5 (optional) if you want to rate the limit for the chat.
 - `MARKDOWN_INFO_PATH`: (optional) the path to the markdown files in the public directory.
+- `MARKDOWN_EMBEDDING_BATCH_SIZE`: (optional) the number of chunks to process in a single embedding request (default: 50).
+- `MARKDOWN_AI_RETRY_MAX_ATTEMPTS`: (optional) the maximum number of retry attempts for AI requests (default: 3).
 
 To use the configuration, update the code in `config/ai.php` with:
 

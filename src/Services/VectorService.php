@@ -10,9 +10,30 @@ class VectorService
     /**
      * Get embeddings for the given texts.
      */
+    /**
+     * Get embeddings for the given texts with retry logic.
+     */
     public function getEmbeddings(array $texts): array
     {
-        return Embeddings::for($texts)->generate()->embeddings;
+        $maxAttempts = config('laravel-markdown-rag.markdown_ai_retry_max_attempts', 3);
+        $attempt = 1;
+
+        while ($attempt <= $maxAttempts) {
+            try {
+                return Embeddings::for($texts)->generate()->embeddings;
+            } catch (\Exception $e) {
+                if ($attempt === $maxAttempts || !str_contains(strtolower($e->getMessage()), 'rate limit')) {
+                    throw $e;
+                }
+
+                $delay = pow(2, $attempt); // Exponential backoff
+                \Illuminate\Support\Facades\Log::warning("AI provider rate limited. Retrying in {$delay} seconds... (Attempt {$attempt}/{$maxAttempts})");
+                sleep($delay);
+                $attempt++;
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -33,7 +54,12 @@ class VectorService
      */
     public function search(string $query, int $limit = 5)
     {
-        $queryEmbedding = $this->getEmbeddings([$query])[0];
+        $embeddings = $this->getEmbeddings([$query]);
+        $queryEmbedding = $embeddings[0] ?? null;
+
+        if (!$queryEmbedding) {
+            return collect();
+        }
         
         return KnowledgeChunk::similaritySearch($queryEmbedding, $limit);
     }

@@ -60,20 +60,35 @@ class KnowledgeIndexCommand extends Command
 
         $chunks = $vectorService->chunkDocuments($documents);
         $total = count($chunks);
+        $batchSize = config('laravel-markdown-rag.markdown_embedding_batch_size', 50);
         
-        $this->info("Found {$total} chunks. Generating embeddings...");
+        $this->info("Found {$total} chunks. Generating embeddings in batches of {$batchSize}...");
 
         $bar = $this->output->createProgressBar($total);
         $bar->start();
         
-        foreach ($chunks as $chunk) {
+        $chunkBatches = array_chunk($chunks, $batchSize);
+
+        foreach ($chunkBatches as $batch) {
+            $texts = array_column($batch, 'text');
+            
             try {
-                $embedding = $vectorService->getEmbeddings([$chunk['text']])[0];
-                $vectorService->storeChunk($chunk['text'], $embedding, $chunk['source']);
+                $embeddings = $vectorService->getEmbeddings($texts);
+                
+                if (count($embeddings) !== count($batch)) {
+                    $this->error("\nEmbedding mismatch: Expected " . count($batch) . " but got " . count($embeddings));
+                    continue;
+                }
+
+                foreach ($batch as $index => $chunk) {
+                    $vectorService->storeChunk($chunk['text'], $embeddings[$index], $chunk['source']);
+                    $bar->advance();
+                }
             } catch (\Exception $e) {
-                $this->error("\nError indexing chunk from {$chunk['source']}: {$e->getMessage()}");
+                $this->error("\nError indexing batch: {$e->getMessage()}");
+                // Advance bar for failed batch to keep progress accurate
+                $bar->advance(count($batch));
             }
-            $bar->advance();
         }
         
         $bar->finish();
