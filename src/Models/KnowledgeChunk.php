@@ -19,12 +19,14 @@ class KnowledgeChunk extends Model
     /**
      * Perform a similarity search based on cosine similarity.
      */
-    public static function similaritySearch(array $queryEmbedding, int $limit = 5)
+    public static function similaritySearch(array $queryEmbedding, int $limit = 5, ?string $documentId = null)
     {
-        return self::all()->map(function ($chunk) use ($queryEmbedding) {
-            $chunk->similarity = self::cosineSimilarity($chunk->embedding, $queryEmbedding);
-            return $chunk;
-        })->sortByDesc('similarity')->take($limit);
+        return self::when($documentId, fn($query) => $query->where('source', $documentId))
+            ->get()
+            ->map(function ($chunk) use ($queryEmbedding) {
+                $chunk->similarity = self::cosineSimilarity($chunk->embedding, $queryEmbedding);
+                return $chunk;
+            })->sortByDesc('similarity')->take($limit);
     }
 
     private static function cosineSimilarity(array $vec1, array $vec2): float

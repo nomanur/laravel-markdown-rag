@@ -11,7 +11,10 @@ use Nomanur\Services\VectorService;
 
 class KnowledgeSearchTool implements Tool
 {
-    public function __construct(protected ?\App\Models\User $user = null) {}
+    public function __construct(
+        protected ?\App\Models\User $user = null,
+        protected ?string $documentId = null
+    ) {}
 
     public function description(): Stringable|string
     {
@@ -26,6 +29,7 @@ class KnowledgeSearchTool implements Tool
     public function handle(Request $request): Stringable|string
     {
         $query = $request['query'] ?? '';
+        $documentId = $request['document_id'] ?? $this->documentId;
         
         if (empty($query)) {
             return 'Please provide a search query.';
@@ -47,7 +51,7 @@ class KnowledgeSearchTool implements Tool
         $limit = $rerankingEnabled ? 10 : 3;
 
         $vectorService = app(VectorService::class);
-        $results = $vectorService->search($query, $limit);
+        $results = $vectorService->search($query, $limit, $documentId);
 
         if ($results->isEmpty()) {
             return 'No relevant information found in the knowledge base.';
@@ -73,6 +77,7 @@ class KnowledgeSearchTool implements Tool
     {
         return [
             'query' => $schema->string()->description('The search query to look up in the knowledge base.')->required(),
+            'document_id' => $schema->string()->description('Optional ID of a specific document to search within. If provided, search will be restricted to this document.')->optional(),
         ];
     }
 }

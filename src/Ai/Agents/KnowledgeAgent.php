@@ -16,7 +16,10 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
 {
     use Promptable;
 
-    public function __construct(public User $user) {}
+    public function __construct(
+        public User $user,
+        protected ?string $documentId = null
+    ) {}
 
     /**
      * Get the instructions that the agent should follow.
@@ -59,7 +62,7 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     public function tools(): iterable
     {
         return [
-            new KnowledgeSearchTool($this->user),
+            new KnowledgeSearchTool($this->user, $this->documentId),
         ];
     }
 }

@@ -52,7 +52,7 @@ class VectorService
     /**
      * Search for similar knowledge chunks.
      */
-    public function search(string $query, int $limit = 5)
+    public function search(string $query, int $limit = 5, ?string $documentId = null)
     {
         $embeddings = $this->getEmbeddings([$query]);
         $queryEmbedding = $embeddings[0] ?? null;
@@ -61,7 +61,7 @@ class VectorService
             return collect();
         }
         
-        return KnowledgeChunk::similaritySearch($queryEmbedding, $limit);
+        return KnowledgeChunk::similaritySearch($queryEmbedding, $limit, $documentId);
     }
 
     public function reduceDimensions(array $embeddings): array
