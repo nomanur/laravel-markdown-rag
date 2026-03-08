@@ -54,6 +54,20 @@ To use the configuration, update the code in `config/ai.php` with:
 'default_for_transcription' => env('AI_TRANSCRIPTION_PROVIDER', 'openai'),
 'default_for_embeddings' => env('AI_EMBEDDING_PROVIDER', 'openai'),
 'default_for_reranking' => env('AI_RERANKING_PROVIDER', 'cohere'),
+
+'providers' => [
+    'gemini' => [
+        'driver' => 'gemini',
+        'key' => env('GEMINI_API_KEY'),
+        'models' => [
+            'text' => [
+                'default' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+                'cheapest' => env('GEMINI_MODEL_CHEAPEST', 'gemini-1.5-flash'),
+                'smartest' => env('GEMINI_MODEL_SMARTEST', 'gemini-2.0-pro-exp-02-05'),
+            ],
+        ],
+    ],
+],
 ```
 
 ## Usage
