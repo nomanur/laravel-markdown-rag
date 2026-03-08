@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('content');
             $table->json('embedding');
             $table->string('source');
+            $table->string('document_id')->nullable()->index();
             $table->json('metadata')->nullable();
             $table->timestamps();
         });

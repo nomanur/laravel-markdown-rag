@@ -39,12 +39,13 @@ class VectorService
     /**
      * Store a chunk and its embedding in the database.
      */
-    public function storeChunk(string $content, array $embedding, string $source, array $metadata = []): KnowledgeChunk
+    public function storeChunk(string $content, array $embedding, string $source, ?string $documentId = null, array $metadata = []): KnowledgeChunk
     {
         return KnowledgeChunk::create([
             'content' => $content,
             'embedding' => $embedding,
             'source' => $source,
+            'document_id' => $documentId,
             'metadata' => $metadata,
         ]);
     }
@@ -88,6 +89,7 @@ class VectorService
                 $chunks[] = [
                     'text' => $split,
                     'source' => basename($path),
+                    'document_id' => basename($path), // For now using basename as ID
                 ];
             }
         }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KnowledgeChunk extends Model
 {
-    protected $fillable = ['content', 'embedding', 'source', 'metadata'];
+    protected $fillable = ['content', 'embedding', 'source', 'document_id', 'metadata'];
 
     protected function casts(): array
     {
@@ -21,12 +21,16 @@ class KnowledgeChunk extends Model
      */
     public static function similaritySearch(array $queryEmbedding, int $limit = 5, ?string $documentId = null)
     {
-        return self::when($documentId, fn($query) => $query->where('source', $documentId))
+        return self::query()
+            ->when($documentId, fn ($query) => $query->where('document_id', $documentId))
             ->get()
             ->map(function ($chunk) use ($queryEmbedding) {
                 $chunk->similarity = self::cosineSimilarity($chunk->embedding, $queryEmbedding);
+
                 return $chunk;
-            })->sortByDesc('similarity')->take($limit);
+            })
+            ->sortByDesc('similarity')
+            ->take($limit);
     }
 
     private static function cosineSimilarity(array $vec1, array $vec2): float

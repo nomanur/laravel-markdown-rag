@@ -81,7 +81,7 @@ class KnowledgeIndexCommand extends Command
                 }
 
                 foreach ($batch as $index => $chunk) {
-                    $vectorService->storeChunk($chunk['text'], $embeddings[$index], $chunk['source']);
+                    $vectorService->storeChunk($chunk['text'], $embeddings[$index], $chunk['source'], $chunk['document_id'] ?? null);
                     $bar->advance();
                 }
             } catch (\Exception $e) {
