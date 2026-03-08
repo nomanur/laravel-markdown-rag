@@ -77,7 +77,7 @@ class KnowledgeSearchTool implements Tool
     {
         return [
             'query' => $schema->string()->description('The search query to look up in the knowledge base.')->required(),
-            'document_id' => $schema->string()->description('Optional ID of a specific document to search within. If provided, search will be restricted to this document.')->optional(),
+            'document_id' => $schema->string()->description('Optional ID of a specific document to search within. If provided, search will be restricted to this document.'),
         ];
     }
 }
