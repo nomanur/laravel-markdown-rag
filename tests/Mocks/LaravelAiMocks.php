@@ -37,5 +37,7 @@ class Embeddings {
 
 namespace Laravel\Ai;
 trait Promptable {
-    public function promptAction($prompt) { return new \Laravel\Ai\Responses\AgentResponse("AI response"); }
+    public function prompt(string $prompt, array $attachments = [], ?string $provider = null, ?string $model = null): \Laravel\Ai\Responses\AgentResponse {
+        return new \Laravel\Ai\Responses\AgentResponse("AI response");
+    }
 }
