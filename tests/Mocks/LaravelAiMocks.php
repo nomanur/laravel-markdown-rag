@@ -9,9 +9,17 @@ interface Tool {
     public function schema(\Illuminate\Contracts\JsonSchema\JsonSchema $schema): array;
 }
 
-interface Agent {}
+interface Agent {
+    public function prompt(string $prompt, array $attachments = [], ?string $provider = null, ?string $model = null): \Laravel\Ai\Responses\AgentResponse;
+}
 interface Conversational {}
 interface HasTools {}
+
+namespace Laravel\Ai\Responses;
+class AgentResponse implements \Stringable {
+    public function __construct(protected string $content = "AI response") {}
+    public function __toString(): string { return $this->content; }
+}
 
 namespace Laravel\Ai\Tools;
 class Request extends \Illuminate\Support\Fluent {}
@@ -29,5 +37,5 @@ class Embeddings {
 
 namespace Laravel\Ai;
 trait Promptable {
-    public function prompt($prompt) { return "AI response"; }
+    public function promptAction($prompt) { return new \Laravel\Ai\Responses\AgentResponse("AI response"); }
 }

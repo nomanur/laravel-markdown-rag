@@ -12,6 +12,7 @@ use Laravel\Ai\Messages\Message;
 use Nomanur\Ai\Tools\KnowledgeSearchTool;
 use Laravel\Ai\Contracts\HasTools;
 use Laravel\Ai\Contracts\Conversational;
+use Laravel\Ai\Responses\AgentResponse;
 
 class KnowledgeAgent implements Agent, Conversational, HasTools
 {
@@ -39,15 +40,15 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     /**
      * Prompt the agent with the given query.
      */
-    public function prompt(string $query): Stringable|string
+    public function prompt(string $prompt, array $attachments = [], ?string $provider = null, ?string $model = null): AgentResponse
     {
-        return $this->generateResponse($query);
+        return $this->generateResponse($prompt);
     }
 
     /**
      * Generate a response for the given query.
      */
-    protected function generateResponse(string $query): Stringable|string
+    protected function generateResponse(string $query): AgentResponse
     {
         return $this->promptAction($query);
     }
