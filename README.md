@@ -111,6 +111,48 @@ php artisan markdownrag:index
 You can access the chat interface at the following URL:
 `your-domain.com/markdownrag`
 
+### 5. Customizing Message History
+By default, `KnowledgeAgent` retrieves messages from the `History` model. You can customize how messages are resolved using one of the following options:
+
+#### Option 1: Global override in `AppServiceProvider`
+Use the `resolveMessagesUsing` static method to customize message resolution globally:
+
+```php
+KnowledgeAgent::resolveMessagesUsing(function ($agent) {
+    return History::where('user_id', $agent->user->id)
+        ->where('agent', 'knowledge')
+        ->latest()
+        ->skip(1) // Your custom skip logic
+        ->when(config('laravel-markdown-rag.markdown_chat_rate_limit'), fn($query, $limit) => $query->limit($limit))
+        ->get()
+        ->reverse()
+        ->map(fn($message) => new Message($message->role, $message->content))
+        ->all();
+});
+```
+
+#### Option 2: Inheritance in another project
+If you are extending the agent in another project, you can override the `messages()` method directly:
+
+```php
+class ExtendedKnowledgeAgent extends KnowledgeAgent
+{
+    public function messages(): iterable
+    {
+        // Custom implementation with skip(1)
+        return History::where('user_id', $this->user->id)
+            ->where('agent', 'knowledge')
+            ->latest()
+            ->skip(1)
+            ->when(config('laravel-markdown-rag.markdown_chat_rate_limit'), fn($query, $limit) => $query->limit($limit))
+            ->get()
+            ->reverse()
+            ->map(fn($message) => new Message($message->role, $message->content))
+            ->all();
+    }
+}
+```
+
 ### Testing
 
 ```bash
