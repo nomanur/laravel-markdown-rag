@@ -38,12 +38,16 @@ AI_DEFAULT_PROVIDER=gemini
 MARKDOWN_INFO_PATH=knowledge-base
 MARKDOWN_EMBEDDING_BATCH_SIZE=50
 MARKDOWN_AI_RETRY_MAX_ATTEMPTS=3
+MARKDOWN_QUERY_REWRITE=false
+MARKDOWN_RERANKING=false
 ```
 
 - `MARKDOWN_CHAT_RATE_LIMIT`: 5 (optional) if you want to rate the limit for the chat.
 - `MARKDOWN_INFO_PATH`: (optional) the path to the markdown files in the public directory.
 - `MARKDOWN_EMBEDDING_BATCH_SIZE`: (optional) the number of chunks to process in a single embedding request (default: 50).
 - `MARKDOWN_AI_RETRY_MAX_ATTEMPTS`: (optional) the maximum number of retry attempts for AI requests (default: 3).
+- `MARKDOWN_QUERY_REWRITE`: (optional) whether to enable query rewriting for better retrieval (default: false).
+- `MARKDOWN_RERANKING`: (optional) whether to enable reranking of search results (default: false).
 
 To use the configuration, update the code in `config/ai.php` with:
 

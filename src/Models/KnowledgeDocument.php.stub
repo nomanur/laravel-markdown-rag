@@ -12,11 +12,4 @@ class KnowledgeDocument extends Model
         'metadata' => 'array',
     ];
 
-    protected static function booted()
-    {
-        static::updated(function ($document) {
-            \Illuminate\Support\Facades\Cache::forget("doc_{$document->id}_tool_desc");
-            \Illuminate\Support\Facades\Cache::forget("doc_{$document->id}_system_prompt");
-        });
-    }
 }

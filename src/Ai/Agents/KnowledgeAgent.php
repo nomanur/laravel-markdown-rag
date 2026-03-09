@@ -30,6 +30,22 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     }
 
     /**
+     * Prompt the agent with the given query.
+     */
+    public function prompt(string $query): Stringable|string
+    {
+        return $this->generateResponse($query);
+    }
+
+    /**
+     * Generate a response for the given query.
+     */
+    protected function generateResponse(string $query): Stringable|string
+    {
+        return $this->promptAction($query);
+    }
+
+    /**
      * Get the instructions that the agent should follow.
      */
     public function instructions(): Stringable|string
@@ -39,11 +55,9 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
                 ?? "You are a helpful assistant.";
         }
 
-        return \Illuminate\Support\Facades\Cache::remember("doc_{$this->document->id}_system_prompt", 3600, function () {
-            return $this->document->getAttribute('system_prompt') 
-                ?? config('laravel-markdown-rag.markdown_default_agent_prompt') 
-                ?? "You are a helpful assistant.";
-        });
+        return $this->document->getAttribute('system_prompt') 
+            ?? config('laravel-markdown-rag.markdown_default_agent_prompt') 
+            ?? "You are a helpful assistant.";
     }
 
     /**
@@ -78,10 +92,8 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
         if (!$this->document) {
             $description = "Search across all available company documents and knowledge.";
         } else {
-            $description = \Illuminate\Support\Facades\Cache::remember("doc_{$this->document->id}_tool_desc", 3600, function () {
-                return $this->document->getAttribute('tool_description') 
-                    ?? "Search across all available company documents and knowledge.";
-            });
+            $description = $this->document->getAttribute('tool_description') 
+                ?? "Search across all available company documents and knowledge.";
         }
 
         return [
