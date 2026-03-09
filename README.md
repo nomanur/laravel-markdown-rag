@@ -118,6 +118,10 @@ By default, `KnowledgeAgent` retrieves messages from the `History` model. You ca
 Use the `resolveMessagesUsing` static method to customize message resolution globally:
 
 ```php
+use Nomanur\Ai\Agents\KnowledgeAgent;
+use Nomanur\Models\History;
+use Laravel\Ai\Messages\Message;
+
 KnowledgeAgent::resolveMessagesUsing(function ($agent) {
     return History::where('user_id', $agent->user->id)
         ->where('agent', 'knowledge')
@@ -135,6 +139,10 @@ KnowledgeAgent::resolveMessagesUsing(function ($agent) {
 If you are extending the agent in another project, you can override the `messages()` method directly:
 
 ```php
+use Nomanur\Ai\Agents\KnowledgeAgent;
+use Nomanur\Models\History;
+use Laravel\Ai\Messages\Message;
+
 class ExtendedKnowledgeAgent extends KnowledgeAgent
 {
     public function messages(): iterable
