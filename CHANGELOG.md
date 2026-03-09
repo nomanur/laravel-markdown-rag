@@ -15,3 +15,10 @@ All notable changes to `laravel-markdown-rag` will be documented in this file
 - Added `tool_description` and `system_prompt` fields to `KnowledgeDocument` model.
 - Added cache invalidation on document update.
 
+
+## 1.3.0 - 2026-03-10
+
+- Added support for overwriting the knowledge system prompt and tool description.
+- Added `tool_description` and `system_prompt` fields to `KnowledgeDocument` model.
+- Added cache invalidation on document update.
+
