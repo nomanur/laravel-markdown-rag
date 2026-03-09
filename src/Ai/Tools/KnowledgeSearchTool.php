@@ -9,16 +9,20 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 use Nomanur\Services\VectorService;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 class KnowledgeSearchTool implements Tool
 {
     public function __construct(
-        protected ?\App\Models\User $user = null,
-        protected ?string $documentId = null
+        protected ?Authenticatable $user = null,
+        protected ?string $documentId = null,
+        protected ?string $customDescription = null
     ) {}
 
     public function description(): Stringable|string
     {
-        return 'Search the internal knowledge base for information about the company, products, employees, and contracts.';
+        return $this->customDescription 
+            ?? 'Search the internal knowledge base for information about the company, products, employees, and contracts.';
     }
 
     public function name(): string

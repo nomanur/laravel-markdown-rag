@@ -3,7 +3,8 @@
 namespace Nomanur\Ai\Agents;
 
 use Stringable;
-use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Nomanur\Models\KnowledgeDocument;
 use Nomanur\Models\History;
 use Laravel\Ai\Promptable;
 use Laravel\Ai\Contracts\Agent;
@@ -17,19 +18,32 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     use Promptable;
 
     public function __construct(
-        public User $user,
-        protected ?string $documentId = null
-    ) {}
+        public Authenticatable $user,
+        protected ?string $documentId = null,
+        protected ?KnowledgeDocument $document = null
+    ) {
+        if (!$this->document && $this->documentId) {
+            $this->document = KnowledgeDocument::where('name', $this->documentId)
+                ->orWhere('path', $this->documentId)
+                ->first();
+        }
+    }
 
     /**
      * Get the instructions that the agent should follow.
      */
     public function instructions(): Stringable|string
     {
-        return "You are an internal corporate assistant. Your goal is to help users by searching through the knowledge base. 
-        Always use the 'search_knowledge_base' tool when asked about company policies, products, employees, or contracts.
-        Provide concise and accurate information based on the search results. If you cannot find the information, let the user know.
-        Cite your sources if the search results provide them.";
+        if (!$this->document) {
+            return config('laravel-markdown-rag.markdown_default_agent_prompt') 
+                ?? "You are a helpful assistant.";
+        }
+
+        return \Illuminate\Support\Facades\Cache::remember("doc_{$this->document->id}_system_prompt", 3600, function () {
+            return $this->document->getAttribute('system_prompt') 
+                ?? config('laravel-markdown-rag.markdown_default_agent_prompt') 
+                ?? "You are a helpful assistant.";
+        });
     }
 
     /**
@@ -61,8 +75,17 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
      */
     public function tools(): iterable
     {
+        if (!$this->document) {
+            $description = "Search across all available company documents and knowledge.";
+        } else {
+            $description = \Illuminate\Support\Facades\Cache::remember("doc_{$this->document->id}_tool_desc", 3600, function () {
+                return $this->document->getAttribute('tool_description') 
+                    ?? "Search across all available company documents and knowledge.";
+            });
+        }
+
         return [
-            new KnowledgeSearchTool($this->user, $this->documentId),
+            new KnowledgeSearchTool($this->user, $this->documentId, $description),
         ];
     }
 }

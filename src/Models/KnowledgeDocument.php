@@ -1,0 +1,22 @@
+<?php
+
+namespace Nomanur\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class KnowledgeDocument extends Model
+{
+    protected $fillable = ['name', 'system_prompt', 'tool_description', 'path', 'metadata'];
+
+    protected $casts = [
+        'metadata' => 'array',
+    ];
+
+    protected static function booted()
+    {
+        static::updated(function ($document) {
+            \Illuminate\Support\Facades\Cache::forget("doc_{$document->id}_tool_desc");
+            \Illuminate\Support\Facades\Cache::forget("doc_{$document->id}_system_prompt");
+        });
+    }
+}

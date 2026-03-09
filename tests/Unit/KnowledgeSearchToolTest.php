@@ -42,6 +42,12 @@ class KnowledgeSearchToolTest extends TestCase
         $this->assertStringContainsString('knowledge base', $tool->description());
     }
 
+    public function test_it_supports_custom_description()
+    {
+        $tool = new KnowledgeSearchTool(null, null, 'Custom tool description');
+        $this->assertEquals('Custom tool description', $tool->description());
+    }
+
     public function test_it_filters_by_document_id_when_provided()
     {
         $vectorService = Mockery::mock(VectorService::class);

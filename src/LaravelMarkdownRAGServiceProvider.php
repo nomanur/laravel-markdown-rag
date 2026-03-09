@@ -45,9 +45,8 @@ class LaravelMarkdownRAGServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/Models/History.php.stub' => app_path('Models/History.php'),
-            ], 'models');
-            $this->publishes([
                 __DIR__.'/Models/KnowledgeChunk.php.stub' => app_path('Models/KnowledgeChunk.php'),
+                __DIR__.'/Models/KnowledgeDocument.php.stub' => app_path('Models/KnowledgeDocument.php'),
             ], 'models');
 
             $this->publishes([

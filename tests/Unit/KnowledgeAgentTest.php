@@ -22,6 +22,12 @@ class KnowledgeAgentTest extends TestCase
                 public function get($key, $default = null) { return $default; }
             };
         });
+        $this->container->singleton('cache', function() {
+            return new class {
+                public function remember($key, $ttl, $callback) { return $callback(); }
+                public function forget($key) { return true; }
+            };
+        });
         Container::setInstance($this->container);
         Facade::setFacadeApplication($this->container);
     }
@@ -36,7 +42,10 @@ class KnowledgeAgentTest extends TestCase
             class_alias(get_class($user), 'App\Models\User');
         }
         
-        $agent = new KnowledgeAgent($user, 'doc_123');
+        // Use Mockery to avoid DB lookup in constructor
+        $mockDoc = \Mockery::mock(\Nomanur\Models\KnowledgeDocument::class);
+        
+        $agent = new KnowledgeAgent($user, 'doc_123', $mockDoc);
         $this->assertInstanceOf(KnowledgeAgent::class, $agent);
     }
 
@@ -53,5 +62,39 @@ class KnowledgeAgentTest extends TestCase
         $agent = new KnowledgeAgent($user);
         $tools = $agent->tools();
         $this->assertIsArray($tools);
+    }
+    public function test_it_passes_tool_description_to_tool()
+    {
+        $user = new \App\Models\User();
+        $mockDoc = \Mockery::mock(\Nomanur\Models\KnowledgeDocument::class);
+        $mockDoc->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        $mockDoc->shouldReceive('getAttribute')->with('tool_description')->andReturn('Specific document search description');
+        
+        $agent = new KnowledgeAgent($user, 'doc_123', $mockDoc);
+        $tools = $agent->tools();
+        $this->assertEquals('Specific document search description', $tools[0]->description());
+    }
+
+    public function test_it_caches_tool_description()
+    {
+        $user = new \App\Models\User();
+        $mockDoc = \Mockery::mock(\Nomanur\Models\KnowledgeDocument::class);
+        $mockDoc->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        
+        $cache = \Mockery::mock('stdClass');
+        $cache->shouldReceive('remember')
+            ->once()
+            ->with('doc_1_tool_desc', 3600, \Mockery::on(function($callback) {
+                return $callback() === 'Cached Description';
+            }))
+            ->andReturn('Cached Description');
+        
+        $this->container->instance('cache', $cache);
+        
+        $mockDoc->shouldReceive('getAttribute')->with('tool_description')->andReturn('Cached Description');
+        
+        $agent = new KnowledgeAgent($user, 'doc_123', $mockDoc);
+        $tools = $agent->tools();
+        $this->assertEquals('Cached Description', $tools[0]->description());
     }
 }
