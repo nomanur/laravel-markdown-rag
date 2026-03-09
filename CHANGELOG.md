@@ -14,3 +14,4 @@ All notable changes to `laravel-markdown-rag` will be documented in this file
 - Implemented caching for system prompt and tool description to reduce LLM token usage.
 - Added `tool_description` and `system_prompt` fields to `KnowledgeDocument` model.
 - Added cache invalidation on document update.
+

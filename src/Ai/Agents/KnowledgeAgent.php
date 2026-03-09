@@ -17,6 +17,13 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
 {
     use Promptable;
 
+    /**
+     * The callback that should be used to resolve the agent's messages.
+     *
+     * @var (callable(\Nomanur\Ai\Agents\KnowledgeAgent): iterable)|null
+     */
+    protected static $messagesResolver;
+
     public function __construct(
         public Authenticatable $user,
         protected ?string $documentId = null,
@@ -69,11 +76,30 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
     }
 
     /**
+     * Set the callback that should be used to resolve the agent's messages.
+     */
+    public static function resolveMessagesUsing(callable $resolver): void
+    {
+        static::$messagesResolver = $resolver;
+    }
+
+    /**
      * Get the list of messages comprising the conversation so far.
      */
     public function messages(): iterable
     {
+        if (static::$messagesResolver) {
+            return call_user_func(static::$messagesResolver, $this);
+        }
 
+        return $this->getConversationMessages();
+    }
+
+    /**
+     * Get the default conversation messages.
+     */
+    protected function getConversationMessages(): iterable
+    {
         return History::where('user_id', $this->user->id)
             ->where('agent', 'knowledge')
             ->latest()
