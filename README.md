@@ -161,6 +161,40 @@ class ExtendedKnowledgeAgent extends KnowledgeAgent
 }
 ```
 
+### 6. Customizing Instructions
+By default, `KnowledgeAgent` retrieves its instructions from the associated document's `system_prompt` or falls back to a default prompt. You can customize the agent's instructions using one of the following options:
+
+#### Option 1: Global override in `AppServiceProvider`
+Use the `resolveInstructionsUsing` static method to customize instructions globally:
+
+```php
+use Nomanur\Ai\Agents\KnowledgeAgent;
+
+KnowledgeAgent::resolveInstructionsUsing(function (KnowledgeAgent $agent) {
+    if ($agent->document) {
+        return "You are an expert on {$agent->document->name}. Answer questions strictly based on it.";
+    }
+    
+    return "You are a helpful AI assistant.";
+});
+```
+
+#### Option 2: Inheritance in another project
+You can also override the `instructions()` method directly by extending the agent:
+
+```php
+use Nomanur\Ai\Agents\KnowledgeAgent;
+use Stringable;
+
+class ExtendedKnowledgeAgent extends KnowledgeAgent
+{
+    public function instructions(): Stringable|string
+    {
+        return "You are a highly capable and friendly assistant.";
+    }
+}
+```
+
 ### Testing
 
 ```bash
