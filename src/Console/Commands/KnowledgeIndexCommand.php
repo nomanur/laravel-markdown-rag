@@ -50,6 +50,13 @@ class KnowledgeIndexCommand extends Command
                     'path' => $file->getRealPath(),
                     'name' => $file->getFilename(),
                 ];
+
+                // Ensure the document exists in the knowledge_documents table
+                // This makes it easier for admins to customize prompts later.
+                \Nomanur\Models\KnowledgeDocument::firstOrCreate(
+                    ['name' => $file->getFilename()],
+                    ['path' => $file->getRealPath()]
+                );
             }
         }
         

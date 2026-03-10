@@ -24,6 +24,14 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
      */
     protected static $messagesResolver;
 
+    /**
+     * The callback that should be used to resolve the agent's instructions.
+     *
+     * @var (callable(\Nomanur\Ai\Agents\KnowledgeAgent): (\Stringable|string))|null
+     */
+    protected static $instructionsResolver;
+
+
     public function __construct(
         public Authenticatable $user,
         protected ?string $documentId = null,
@@ -42,6 +50,10 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
      */
     public function instructions(): Stringable|string
     {
+        if (static::$instructionsResolver) {
+            return call_user_func(static::$instructionsResolver, $this);
+        }
+
         if (!$this->document) {
             return config('laravel-markdown-rag.markdown_default_agent_prompt') 
                 ?? "You are a helpful assistant.";
@@ -50,6 +62,14 @@ class KnowledgeAgent implements Agent, Conversational, HasTools
         return $this->document->getAttribute('system_prompt') 
             ?? config('laravel-markdown-rag.markdown_default_agent_prompt') 
             ?? "You are a helpful assistant.";
+    }
+
+    /**
+     * Set the callback that should be used to resolve the agent's instructions.
+     */
+    public static function resolveInstructionsUsing(callable $resolver): void
+    {
+        static::$instructionsResolver = $resolver;
     }
 
     /**

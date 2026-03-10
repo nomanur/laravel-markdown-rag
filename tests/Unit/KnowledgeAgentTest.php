@@ -32,6 +32,18 @@ class KnowledgeAgentTest extends TestCase
         Facade::setFacadeApplication($this->container);
     }
 
+    protected function tearDown(): void
+    {
+        $reflection = new \ReflectionClass(KnowledgeAgent::class);
+        if ($reflection->hasProperty('instructionsResolver')) {
+            $property = $reflection->getProperty('instructionsResolver');
+            $property->setAccessible(true);
+            $property->setValue(null, null);
+        }
+
+        parent::tearDown();
+    }
+
     public function test_it_can_be_instantiated_with_document_id()
     {
         $user = new class extends \Illuminate\Foundation\Auth\User {
@@ -73,5 +85,41 @@ class KnowledgeAgentTest extends TestCase
         $agent = new KnowledgeAgent($user, 'doc_123', $mockDoc);
         $tools = $agent->tools();
         $this->assertEquals('Specific document search description', $tools[0]->description());
+    }
+
+    public function test_it_returns_default_instructions_without_document()
+    {
+        $user = new \App\Models\User();
+        $agent = new KnowledgeAgent($user);
+        
+        $instructions = (string) $agent->instructions();
+        
+        $this->assertEquals("You are a helpful assistant.", $instructions);
+    }
+
+    public function test_it_returns_document_instructions_when_available()
+    {
+        $user = new \App\Models\User();
+        $mockDoc = \Mockery::mock(\Nomanur\Models\KnowledgeDocument::class);
+        $mockDoc->shouldReceive('getAttribute')->with('system_prompt')->andReturn('You are an expert on Laravel.');
+        
+        $agent = new KnowledgeAgent($user, 'doc_123', $mockDoc);
+        $instructions = (string) $agent->instructions();
+        
+        $this->assertEquals('You are an expert on Laravel.', $instructions);
+    }
+
+    public function test_it_can_resolve_instructions_using_closure()
+    {
+        KnowledgeAgent::resolveInstructionsUsing(function ($agent) {
+            return "Custom Global Instructions";
+        });
+        
+        $user = new \App\Models\User();
+        $agent = new KnowledgeAgent($user);
+        
+        $instructions = (string) $agent->instructions();
+        
+        $this->assertEquals("Custom Global Instructions", $instructions);
     }
 }
