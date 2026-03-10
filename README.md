@@ -195,6 +195,17 @@ class ExtendedKnowledgeAgent extends KnowledgeAgent
 }
 ```
 
+### 7. Customizing Tool Descriptions
+You can also override the description of the `KnowledgeSearchTool` globally. This is useful if you want to give the AI more specific instructions about when to use the search tool:
+
+```php
+use Nomanur\Ai\Tools\KnowledgeSearchTool;
+
+KnowledgeSearchTool::resolveDescriptionUsing(function (KnowledgeSearchTool $tool) {
+    return "Search the internal knowledge base for company policies and HR documents only.";
+});
+```
+
 ### Testing
 
 ```bash

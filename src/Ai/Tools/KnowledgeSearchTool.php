@@ -13,6 +13,13 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class KnowledgeSearchTool implements Tool
 {
+    /**
+     * The callback that should be used to resolve the tool's description.
+     *
+     * @var (callable(\Nomanur\Ai\Tools\KnowledgeSearchTool): (\Stringable|string))|null
+     */
+    protected static $descriptionResolver;
+
     public function __construct(
         protected ?Authenticatable $user = null,
         protected ?string $documentId = null,
@@ -21,8 +28,20 @@ class KnowledgeSearchTool implements Tool
 
     public function description(): Stringable|string
     {
+        if (static::$descriptionResolver) {
+            return call_user_func(static::$descriptionResolver, $this);
+        }
+
         return $this->customDescription 
             ?? 'Search the internal knowledge base for information about the company, products, employees, and contracts.';
+    }
+
+    /**
+     * Set the callback that should be used to resolve the tool's description.
+     */
+    public static function resolveDescriptionUsing(callable $resolver): void
+    {
+        static::$descriptionResolver = $resolver;
     }
 
     public function name(): string

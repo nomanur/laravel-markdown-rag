@@ -31,6 +31,13 @@ class KnowledgeSearchToolTest extends TestCase
 
     protected function tearDown(): void
     {
+        $reflection = new \ReflectionClass(KnowledgeSearchTool::class);
+        if ($reflection->hasProperty('descriptionResolver')) {
+            $property = $reflection->getProperty('descriptionResolver');
+            $property->setAccessible(true);
+            $property->setValue(null, null);
+        }
+
         Mockery::close();
         parent::tearDown();
     }
@@ -64,5 +71,27 @@ class KnowledgeSearchToolTest extends TestCase
         $tool->handle($request);
         
         $this->addToAssertionCount(1); // Mockery verified the call
+    }
+
+    public function test_it_can_resolve_description_using_closure()
+    {
+        KnowledgeSearchTool::resolveDescriptionUsing(function ($tool) {
+            return "Globally customized search tool description.";
+        });
+        
+        $tool = new KnowledgeSearchTool();
+        
+        $this->assertEquals("Globally customized search tool description.", $tool->description());
+    }
+
+    public function test_closure_resolution_receives_tool_instance()
+    {
+        KnowledgeSearchTool::resolveDescriptionUsing(function ($tool) {
+            return $tool->name() . " - custom generic description";
+        });
+        
+        $tool = new KnowledgeSearchTool();
+        
+        $this->assertEquals("search_knowledge_base - custom generic description", $tool->description());
     }
 }
