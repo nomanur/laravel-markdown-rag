@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel Markdown RAG - Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff2d20;
+            --primary-dark: #e0281c;
+            --secondary: #1e1e1e;
+            --accent: #4f46e5;
+            --accent-light: #6366f1;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-code: #1e1e1e;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .github-btn:hover {
+            background: #2d2d2d;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 10rem 2rem 6rem;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-badge svg {
+            color: var(--success);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 14px rgba(255, 45, 32, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 45, 32, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-light);
+        }
+
+        /* Badges */
+        .badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .badge img {
+            height: 18px;
+            margin-right: 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 4rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .sidebar-nav {
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .sidebar-link.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: linear-gradient(90deg, rgba(255, 45, 32, 0.05), transparent);
+            font-weight: 500;
+        }
+
+        /* Content */
+        .content {
+            max-width: 900px;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+            color: var(--text-secondary);
+        }
+
+        .section ul, .section ol {
+            margin: 1.25rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .section li strong {
+            color: var(--text-primary);
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: all 0.2s;
+        }
+
+        .feature-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(255, 45, 32, 0.1), rgba(255, 45, 32, 0.05));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        pre::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        pre::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 3px;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        :not(pre) > code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 0.85em;
+        }
+
+        pre code {
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            position: relative;
+        }
+
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: #2d2d2d;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            border-bottom: 1px solid #3d3d3d;
+        }
+
+        .code-block-header span {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #4b5563;
+            color: var(--text-light);
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #3d3d3d;
+            color: white;
+        }
+
+        pre.with-header {
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            margin-top: 0;
+        }
+
+        /* Syntax highlighting */
+        .comment { color: #6a9955; }
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .variable { color: #9cdcfe; }
+        .number { color: #b5cea8; }
+        .class-name { color: #4ec9b9; }
+        .tag { color: #569cd6; }
+        .attr { color: #9cdcfe; }
+        .value { color: #ce9178; }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        .callout-content p {
+            margin: 0;
+        }
+
+        .callout-content code {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .callout-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid var(--info);
+        }
+
+        .callout-success {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 4px solid var(--success);
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--warning);
+        }
+
+        .callout-error {
+            background: rgba(239, 68, 68, 0.08);
+            border-left: 4px solid var(--error);
+        }
+
+        /* Response Examples */
+        .response-example {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .response-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .response-example pre {
+            background: white;
+            border: 1px solid var(--border);
+            margin: 0;
+        }
+
+        .response-example pre code {
+            color: var(--text-primary);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Installation Steps */
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .steps li strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Architecture Flow */
+        .architecture-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .flow-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .flow-number {
+            flex-shrink: 0;
+            width: 2rem;
+            height: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .flow-text {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 span {
+            color: var(--primary);
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-links h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 8rem 1rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(255, 45, 32, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">RAG</div>
+                <div class="logo-text">Laravel <span>Markdown RAG</span></div>
+            </a>
+            <nav class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#installation">Installation</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#usage">Usage</a>
+                <a href="https://github.com/nomanur/laravel-markdown-rag" target="_blank" class="github-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </nav>
+            <button class="mobile-menu-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            AI-Powered Knowledge Base for Laravel
+        </div>
+        <h1>Transform Markdown into<br>Intelligent Knowledge</h1>
+        <p>Convert your Markdown files into an AI-powered Retrieval-Augmented Generation (RAG) knowledge base with vector embeddings, semantic search, and intelligent chat interfaces.</p>
+        <div class="hero-buttons">
+            <a href="#installation" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4v16h16V4H4z"/>
+                    <path d="M8 12h8M12 8v8"/>
+                </svg>
+                Get Started
+            </a>
+            <a href="https://github.com/nomanur/laravel-markdown-rag" class="btn btn-secondary" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+            </a>
+        </div>
+        <div class="badges">
+            <div class="badge">
+                <img src="https://img.shields.io/packagist/v/nomanur/laravel-markdown-rag.svg?style=flat-square" alt="Version">
+                Latest Version
+            </div>
+            <div class="badge">
+                <img src="https://img.shields.io/badge/php-8.2%2B-blue.svg" alt="PHP">
+                PHP 8.2+
+            </div>
+            <div class="badge">
+                <img src="https://img.shields.io/badge/laravel-10%2B-red.svg" alt="Laravel">
+                Laravel 10+
+            </div>
+            <div class="badge">
+                <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+                MIT License
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Getting Started</div>
+                    <a href="#overview" class="sidebar-link active">Overview</a>
+                    <a href="#installation" class="sidebar-link">Installation</a>
+                    <a href="#configuration" class="sidebar-link">Configuration</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Core System</div>
+                    <a href="#architecture" class="sidebar-link">Architecture</a>
+                    <a href="#indexing" class="sidebar-link">Indexing System</a>
+                    <a href="#chat" class="sidebar-link">Chat Interface</a>
+                    <a href="#visualization" class="sidebar-link">Visualization</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Components</div>
+                    <a href="#services" class="sidebar-link">Services</a>
+                    <a href="#models" class="sidebar-link">Models</a>
+                    <a href="#ai-components" class="sidebar-link">AI Components</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Customization</div>
+                    <a href="#customization" class="sidebar-link">Publishing</a>
+                    <a href="#agent-customization" class="sidebar-link">Agent Customization</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Resources</div>
+                    <a href="#commands" class="sidebar-link">Commands</a>
+                    <a href="#troubleshooting" class="sidebar-link">Troubleshooting</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Overview Section -->
+            <section id="overview" class="section">
+                <h2>📖 Overview</h2>
+                <p><strong>Laravel Markdown RAG</strong> is a comprehensive Laravel package that transforms Markdown files into an AI-powered knowledge base. It uses vector embeddings, cosine similarity search, and large language models to answer user questions based on your documentation.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h4>Markdown Indexing</h4>
+                        <p>Automatically reads and chunks .md files from a configurable directory with intelligent text splitting.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h4>Vector Embeddings</h4>
+                        <p>Generates semantic embeddings for each text chunk powered by laravel/ai package.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h4>AI Chat Interface</h4>
+                        <p>Livewire-powered chat where users ask questions and get AI answers grounded in your knowledge base.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h4>Query Rewriting</h4>
+                        <p>Optional keyword extraction or AI-powered query rewriting for better search results.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4>Reranking</h4>
+                        <p>Optional AI or keyword-based reranking of search results for improved relevance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h4>2D Visualization</h4>
+                        <p>t-SNE-based embedding visualization via Plotly.js for exploring your knowledge base.</p>
+                    </div>
+                </div>
+
+                <h4>Requirements</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dependency</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>PHP</strong></td><td>^8.2</td></tr>
+                            <tr><td><strong>Laravel</strong></td><td>^10 | ^11 | ^12</td></tr>
+                            <tr><td><strong>Livewire</strong></td><td>^3 | ^4</td></tr>
+                            <tr><td><strong>laravel/ai</strong></td><td>^0.2.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Installation Section -->
+            <section id="installation" class="section">
+                <h2>🚀 Installation</h2>
+
+                <ol class="steps">
+                    <li>
+                        <strong>Install via Composer</strong>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre class="with-header"><code>composer require nomanur/laravel-markdown-rag</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Run Migrations</strong>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre class="with-header"><code>php artisan migrate</code></pre>
+                        </div>
+                        <p>This creates three tables:</p>
+                        <ul>
+                            <li><code>histories</code> — stores conversation messages</li>
+                            <li><code>knowledge_chunks</code> — stores text chunks, embeddings, and source metadata</li>
+                            <li><code>knowledge_documents</code> — stores metadata for each indexed markdown file</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Publish Configuration (Optional)</strong>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre class="with-header"><code>php artisan vendor:publish --provider="Nomanur\LaravelMarkdownRAGServiceProvider" --tag="config"</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Set Environment Variables</strong>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <span>env</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre class="with-header"><code>OPENAI_API_KEY=your_api_key_here
+MARKDOWN_CHAT_RATE_LIMIT=100
+MARKDOWN_RERANKING=false
+MARKDOWN_QUERY_REWRITE=false
+AI_PROMPT_REWRITING=false</code></pre>
+                        </div>
+                    </li>
+                </ol>
+
+                <div class="callout callout-warning">
+                    <div class="callout-icon">⚠️</div>
+                    <div class="callout-content">
+                        <p><strong>Note:</strong> Despite the <code>OPENAI_API_KEY</code> naming, this package uses <code>laravel/ai</code> which supports multiple AI providers including Gemini. Configure your preferred provider in <code>config/ai.php</code>.</p>
+                    </div>
+                </div>
+
+                <h3>Publishable Components</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>What Gets Published</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>--tag="config"</code></td>
+                                <td>Configuration file to <code>config/laravel-markdown-rag.php</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>--tag="views"</code></td>
+                                <td>All Blade views for customization</td>
+                            </tr>
+                            <tr>
+                                <td><code>--tag="models"</code></td>
+                                <td>History, KnowledgeChunk, KnowledgeDocument models</td>
+                            </tr>
+                            <tr>
+                                <td><code>--tag="livewire"</code></td>
+                                <td>RagChat, WithoutFlux Livewire components</td>
+                            </tr>
+                            <tr>
+                                <td><code>--tag="migrations"</code></td>
+                                <td>Database migration files</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="configuration" class="section">
+                <h2>⚙️ Configuration</h2>
+                <p>The configuration file is published to <code>config/laravel-markdown-rag.php</code>. Here are all available options:</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>openai_api_key</code></td>
+                                <td><code>env('OPENAI_API_KEY')</code></td>
+                                <td>API key for the AI provider</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_chat_rate_limit</code></td>
+                                <td><code>env('MARKDOWN_CHAT_RATE_LIMIT')</code></td>
+                                <td>Maximum chat history records per user</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_reranking</code></td>
+                                <td><code>false</code></td>
+                                <td>Enable reranking of search results</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_query_rewrite</code></td>
+                                <td><code>false</code></td>
+                                <td>Enable query rewriting before search</td>
+                            </tr>
+                            <tr>
+                                <td><code>ai_prompt_rewriting</code></td>
+                                <td><code>false</code></td>
+                                <td>Enable AI-powered prompt rewriting</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_info_path</code></td>
+                                <td><code>'knowledge-base'</code></td>
+                                <td>Path relative to <code>public/</code> for .md files</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_embedding_batch_size</code></td>
+                                <td><code>50</code></td>
+                                <td>Number of embeddings per batch request</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_ai_retry_max_attempts</code></td>
+                                <td><code>3</code></td>
+                                <td>Maximum retry attempts for AI requests</td>
+                            </tr>
+                            <tr>
+                                <td><code>markdown_default_agent_prompt</code></td>
+                                <td>(default prompt)</td>
+                                <td>Default system prompt for the knowledge agent</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="section">
+                <h2>🏗️ System Architecture</h2>
+                <p>The package operates in three distinct phases, creating a complete pipeline from markdown files to AI-powered answers:</p>
+
+                <h3>Phase 1: Indexing</h3>
+                <div class="architecture-flow">
+                    <div class="flow-item">
+                        <div class="flow-number">1</div>
+                        <div class="flow-text">Admin places <code>.md</code> files in <code>public/{markdown_info_path}/</code> (default: <code>public/knowledge-base/</code>)</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">2</div>
+                        <div class="flow-text">Admin runs <code>php artisan markdownrag:index</code></div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">3</div>
+                        <div class="flow-text"><strong>TextSplitter</strong> reads and chunks each markdown file using paragraph → line → character fallback strategy</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">4</div>
+                        <div class="flow-text"><strong>VectorService</strong> generates embeddings for each chunk in batches via <code>laravel/ai</code></div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">5</div>
+                        <div class="flow-text">Chunks + embeddings stored in <code>knowledge_chunks</code> table; metadata in <code>knowledge_documents</code></div>
+                    </div>
+                </div>
+
+                <h3>Phase 2: Chat</h3>
+                <div class="architecture-flow">
+                    <div class="flow-item">
+                        <div class="flow-number">1</div>
+                        <div class="flow-text">Authenticated user visits <code>/markdownrag</code></div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">2</div>
+                        <div class="flow-text">Livewire component renders chat interface with existing history</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">3</div>
+                        <div class="flow-text">User sends message → saved to <code>histories</code> table</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">4</div>
+                        <div class="flow-text"><strong>KnowledgeAgent</strong> constructs system prompt + retrieves conversation history</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">5</div>
+                        <div class="flow-text">Agent calls <strong>KnowledgeSearchTool</strong> → generates query embedding → cosine similarity search</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">6</div>
+                        <div class="flow-text">Optional: Query rewriting and reranking refine results</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">7</div>
+                        <div class="flow-text">AI generates response → saved to <code>histories</code> → displayed to user</div>
+                    </div>
+                </div>
+
+                <h3>Phase 3: Visualization</h3>
+                <div class="architecture-flow">
+                    <div class="flow-item">
+                        <div class="flow-number">1</div>
+                        <div class="flow-text">Admin visits <code>/vector-embedding</code> (requires auth + verified)</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">2</div>
+                        <div class="flow-text">Top 100 chunks fetched from database</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">3</div>
+                        <div class="flow-text"><strong>TSNE</strong> reduces high-dimensional embeddings to 2D coordinates</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-number">4</div>
+                        <div class="flow-text">Plotly.js renders interactive scatter plot with hover tooltips</div>
+                    </div>
+                </div>
+
+                <h3>Component Architecture</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>architecture</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>┌─────────────────────────────────────────────────────────────┐
+│                  Laravel Markdown RAG                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────┐   ┌──────────────┐   ┌────────────────┐  │
+│  │  .md Files   │──▶│ TextSplitter │──▶│ KnowledgeDoc   │  │
+│  │ (public/KB)  │   │  (chunking)  │   │ KnowledgeChunk │  │
+│  └──────────────┘   └──────────────┘   └────────────────┘  │
+│                           │                       │         │
+│                           ▼                       ▼         │
+│                    ┌──────────────┐  ┌──────────────────┐  │
+│                    │ VectorService│─▶│   Database       │  │
+│                    │ (embeddings) │  │  (chunks/docs)   │  │
+│                    └──────────────┘  └──────────────────┘  │
+│                                             │               │
+│  ┌──────────────┐   ┌──────────────┐        │               │
+│  │  User Chat   │──▶│KnowledgeAgent│◀───────┘               │
+│  │ (Livewire)   │   │+ SearchTool  │                        │
+│  └──────────────┘   └──────────────┘                        │
+│         │                   │                                │
+│         │  ┌────────────────┼──────────┐                    │
+│         │  ▼                ▼          ▼                    │
+│         │ QueryRewrite   RerankSvc   TSNE                   │
+│         │ Service                     (visualization)        │
+│         │  ▼                                                │
+│         │ History Model                                     │
+│         └───────────────────────────────────────────────────┘
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+                </div>
+            </section>
+
+            <!-- Indexing Section -->
+            <section id="indexing" class="section">
+                <h2>📚 Indexing System</h2>
+
+                <h3>Artisan Commands</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>php artisan markdownrag:index          # Index all .md files
+php artisan markdownrag:index --clear  # Clear existing chunks first</code></pre>
+                </div>
+
+                <h3>TextSplitter Strategy</h3>
+                <p>The <code>TextSplitter</code> service intelligently chunks markdown content using a multi-strategy approach:</p>
+                <ul>
+                    <li><strong>Strategy 1:</strong> Split by double newlines (<code>\n\n</code>) — paragraph-based splitting</li>
+                    <li><strong>Strategy 2:</strong> Split by single newlines (<code>\n</code>) — line-based fallback</li>
+                    <li><strong>Strategy 3:</strong> Character-based splitting with word boundary awareness</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">ℹ️</div>
+                    <div class="callout-content">
+                        <p><strong>Default Settings:</strong> chunkSize: 1000 characters, chunkOverlap: 100 characters. Overlap ensures context from the end of one chunk carries into the next, improving search accuracy.</p>
+                    </div>
+                </div>
+
+                <h3>VectorService Operations</h3>
+                <p>The central service for all vector operations:</p>
+
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>php</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>// Generate embeddings with retry logic
+getEmbeddings(array $texts): array
+
+// Store a chunk with its embedding
+storeChunk(string $content, array $embedding, string $source, ?string $documentId, array $metadata): void
+
+// Perform cosine similarity search
+search(string $query, int $limit, ?string $documentId): Collection
+
+// Reduce dimensions for visualization
+reduceDimensions(array $embeddings): array
+
+// Chunk documents and get statistics
+chunkDocuments(array $documents): array
+countCharacters(array $documents): int
+countTokens(array $documents): int</code></pre>
+                </div>
+
+                <h3>Similarity Search Process</h3>
+                <ol>
+                    <li>Generates an embedding for the query string</li>
+                    <li>Performs cosine similarity search across all stored chunks</li>
+                    <li>Optionally filters by <code>documentId</code></li>
+                    <li>Returns results sorted by similarity (highest first)</li>
+                </ol>
+            </section>
+
+            <!-- Chat Interface Section -->
+            <section id="chat" class="section">
+                <h2>💬 Chat Interface</h2>
+
+                <h3>Routes</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Middleware</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>GET /markdownrag</code></td>
+                                <td><code>auth</code></td>
+                                <td>Renders the chat interface (WithoutFlux view)</td>
+                            </tr>
+                            <tr>
+                                <td><code>GET /vector-embedding</code></td>
+                                <td><code>auth, verified</code></td>
+                                <td>Renders the embedding visualization page</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Livewire Components</h3>
+                <p>Two chat components are provided:</p>
+
+                <h4>RagChat (<code>rag-chat</code>)</h4>
+                <ul>
+                    <li>Limited to 50 messages in display</li>
+                    <li>Renders <code>components.rag</code> view</li>
+                    <li>Custom-styled chat interface with CSS custom properties</li>
+                    <li>Full dark mode support</li>
+                </ul>
+
+                <h4>WithoutFlux (<code>without-flux</code>)</h4>
+                <ul>
+                    <li>No message limit — shows all history</li>
+                    <li>Renders <code>components.without-flux</code> view</li>
+                    <li>Uses Marked.js for markdown rendering of AI responses</li>
+                    <li>Uses Tailwind CSS via CDN</li>
+                </ul>
+
+                <h3>KnowledgeSearchTool</h3>
+                <p>The tool available to the AI agent for searching the knowledge base:</p>
+                <ul>
+                    <li><strong>Name:</strong> <code>search_knowledge_base</code></li>
+                    <li><strong>Parameters:</strong>
+                        <ul>
+                            <li><code>query</code> (required, string) — the search query</li>
+                            <li><code>document_id</code> (optional, string) — limit search to a specific document</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Search Pipeline</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>flow</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>User Query → [Query Rewrite?] → Embedding → Similarity Search → [Rerank?] → Top 3 Results → AI Response</code></pre>
+                </div>
+            </section>
+
+            <!-- Visualization Section -->
+            <section id="visualization" class="section">
+                <h2>📈 Embedding Visualization</h2>
+
+                <h3>Access</h3>
+                <p>Visit <code>/vector-embedding</code> while authenticated and verified.</p>
+
+                <h3>How It Works</h3>
+                <ol>
+                    <li>Fetches up to 100 <code>KnowledgeChunk</code> records from the database</li>
+                    <li>Extracts their high-dimensional embeddings</li>
+                    <li>Runs <strong>t-SNE</strong> (t-Distributed Stochastic Neighbor Embedding) to reduce dimensions to 2D</li>
+                    <li>Renders a <strong>Plotly.js</strong> interactive scatter plot</li>
+                </ol>
+
+                <h3>Features</h3>
+                <ul>
+                    <li>Interactive hover — shows source file name and content preview</li>
+                    <li>Displays total chunk count and t-SNE algorithm info</li>
+                    <li>Dark mode support</li>
+                    <li>Empty state with instruction to run <code>markdownrag:index</code> if no chunks exist</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">ℹ️</div>
+                    <div class="callout-content">
+                        <p><strong>TSNE Service:</strong> A PHP implementation of t-SNE, ported from Karpathy's tsne.js. Default perplexity: 30.0, learning rate (eta): 100.0. Uses binary search for optimal beta and gradient descent with momentum.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="section">
+                <h2>⚡ Services Deep Dive</h2>
+
+                <h3>QueryRewriteService</h3>
+                <p>Improves search quality by rewriting user queries before embedding generation:</p>
+
+                <h4>Keyword Mode</h4>
+                <p>Enabled when <code>markdown_query_rewrite=true</code> and <code>ai_prompt_rewriting=false</code>. Removes ~150+ English stop words to extract key terms:</p>
+
+                <div class="response-example">
+                    <div class="response-label">Example</div>
+                    <pre><code>"What is the best way to configure the database?" → "best way configure database"</code></pre>
+                </div>
+
+                <h4>AI Mode</h4>
+                <p>Enabled when <code>ai_prompt_rewriting=true</code>. Uses the LLM to rephrase follow-up questions into standalone queries, incorporating the last 5 conversation messages for context. Includes exponential backoff retry logic.</p>
+
+                <h3>RerankService</h3>
+                <p>Reorders search results for improved relevance:</p>
+
+                <h4>Keyword Mode</h4>
+                <p>Enabled when <code>markdown_reranking=true</code> and <code>ai_prompt_rewriting=false</code>. Scores chunks by keyword occurrence frequency, weighted by term length. Sorts by descending score and returns top 3.</p>
+
+                <h4>AI Mode</h4>
+                <p>Enabled when <code>ai_prompt_rewriting=true</code>. Sends chunks to the AI with instructions to rank them by relevance. Parses the LLM's response for chunk IDs, reorders the collection, and includes a safety fallback for any missed chunks.</p>
+            </section>
+
+            <!-- Models Section -->
+            <section id="models" class="section">
+                <h2>🗄️ Database Models</h2>
+
+                <h3>History Model</h3>
+                <p>Table: <code>histories</code></p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>id</code></td><td>bigint</td><td>Primary key</td></tr>
+                            <tr><td><code>user_id</code></td><td>bigint (FK)</td><td>Foreign key to users table</td></tr>
+                            <tr><td><code>agent</code></td><td>string</td><td>Agent identifier (e.g., 'knowledge')</td></tr>
+                            <tr><td><code>role</code></td><td>string</td><td>'user' or 'assistant'</td></tr>
+                            <tr><td><code>content</code></td><td>text</td><td>Message content</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>Relations:</strong> <code>belongsTo(User::class)</code></p>
+
+                <h3>KnowledgeChunk Model</h3>
+                <p>Table: <code>knowledge_chunks</code></p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>id</code></td><td>bigint</td><td>Primary key</td></tr>
+                            <tr><td><code>content</code></td><td>text</td><td>Text chunk content</td></tr>
+                            <tr><td><code>embedding</code></td><td>json</td><td>Vector embedding array</td></tr>
+                            <tr><td><code>source</code></td><td>string</td><td>Source filename</td></tr>
+                            <tr><td><code>document_id</code></td><td>string (indexed)</td><td>Parent document reference</td></tr>
+                            <tr><td><code>metadata</code></td><td>json (nullable)</td><td>Additional metadata</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>Key Method:</strong> <code>similaritySearch($queryEmbedding, $limit, $documentId)</code> — performs cosine similarity search</p>
+
+                <h3>KnowledgeDocument Model</h3>
+                <p>Table: <code>knowledge_documents</code></p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>id</code></td><td>bigint</td><td>Primary key</td></tr>
+                            <tr><td><code>name</code></td><td>string</td><td>Document name (filename)</td></tr>
+                            <tr><td><code>path</code></td><td>string (nullable)</td><td>File path</td></tr>
+                            <tr><td><code>system_prompt</code></td><td>text (nullable)</td><td>Custom system prompt for this document</td></tr>
+                            <tr><td><code>tool_description</code></td><td>text (nullable)</td><td>Custom tool description</td></tr>
+                            <tr><td><code>metadata</code></td><td>json (nullable)</td><td>Additional metadata</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- AI Components Section -->
+            <section id="ai-components" class="section">
+                <h2>🤖 AI Components</h2>
+
+                <h3>KnowledgeAgent</h3>
+                <p>The core AI agent implementing <code>Agent</code>, <code>Conversational</code>, and <code>HasTools</code> interfaces from <code>laravel/ai</code>:</p>
+
+                <ul>
+                    <li><strong>Constructor:</strong> Accepts an authenticatedized user, optional <code>documentId</code>, and optional <code>KnowledgeDocument</code> object</li>
+                    <li><strong>instructions():</strong> Returns system instructions — either from a custom resolver, the document's <code>system_prompt</code> attribute, or the config default</li>
+                    <li><strong>messages():</strong> Returns conversation history from the <code>History</code> model, filtered by user and <code>agent='knowledge'</code></li>
+                    <li><strong>tools():</strong> Returns a single <code>KnowledgeSearchTool</code> instance</li>
+                    <li><strong>timeout():</strong> Returns 60000ms (60 seconds)</li>
+                </ul>
+
+                <h3>Static Customization Hooks</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>php</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>// Override instructions globally
+KnowledgeAgent::resolveInstructionsUsing(callable $resolver);
+
+// Override message retrieval globally
+KnowledgeAgent::resolveMessagesUsing(callable $resolver);</code></pre>
+                </div>
+            </section>
+
+            <!-- Customization Section -->
+            <section id="customization" class="section">
+                <h2>🎨 Customization</h2>
+
+                <h3>Publishing All Components</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code># Publish everything at once
+php artisan vendor:publish --provider="Nomanur\LaravelMarkdownRAGServiceProvider"</code></pre>
+                </div>
+
+                <h3>Service Provider Auto-Registration</h3>
+                <p>The service provider automatically registers:</p>
+                <ul>
+                    <li>Views from <code>resources/views</code> under the <code>laravel-markdown-rag</code> namespace</li>
+                    <li>Migrations from <code>src/Database/migrations</code></li>
+                    <li>Routes from <code>routes/web.php</code></li>
+                    <li>Livewire components: <code>rag-chat</code> and <code>without-flux</code></li>
+                    <li>Singleton binding for <code>laravel-markdown-rag</code></li>
+                    <li>Console commands</li>
+                </ul>
+            </section>
+
+            <!-- Agent Customization Section -->
+            <section id="agent-customization" class="section">
+                <h2>🔧 Agent & Tool Customization</h2>
+
+                <h3>Customizing Agent Instructions</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>php</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>use Nomanur\Ai\Agents\KnowledgeAgent;
+
+// Globally override agent instructions via closure
+KnowledgeAgent::resolveInstructionsUsing(function (User $user, ?string $documentId, ?KnowledgeDocument $document) {
+    return 'Your custom system instructions here...';
+});</code></pre>
+                </div>
+
+                <h3>Customizing Message Retrieval</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>php</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>KnowledgeAgent::resolveMessagesUsing(function (User $user) {
+    return History::query()
+        ->where('user_id', $user->id)
+        ->where('agent', 'custom_agent')
+        ->latest()
+        ->take(100)
+        ->get();
+});</code></pre>
+                </div>
+
+                <h3>Customizing Search Tool Description</h3>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>php</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code>use Nomanur\Ai\Tools\KnowledgeSearchTool;
+
+KnowledgeSearchTool::resolveDescriptionUsing(function () {
+    return 'Your custom tool description...';
+});</code></pre>
+                </div>
+
+                <div class="callout callout-success">
+                    <div class="callout-icon">✅</div>
+                    <div class="callout-content">
+                        <p><strong>Tip:</strong> After publishing models or Livewire components via <code>vendor:publish</code>, you can modify them in <code>app/Models/</code> or <code>app/Livewire/</code> to add custom relationships, scopes, or business logic.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Commands Section -->
+            <section id="commands" class="section">
+                <h2>🛠️ Artisan Commands</h2>
+
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span>bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="with-header"><code># Index all .md files from public/knowledge-base/
+php artisan markdownrag:index
+
+# Clear existing chunks before indexing
+php artisan markdownrag:index --clear
+
+# Append package routes to your routes/web.php (optional)
+php artisan markdownrag:route</code></pre>
+                </div>
+
+                <h3>markdownrag:index</h3>
+                <p>Indexes all <code>.md</code> files from <code>public/{markdown_info_path}/</code>. Displays a progress bar during indexing and creates <code>KnowledgeDocument</code> records for each file.</p>
+
+                <h3>markdownrag:route</h3>
+                <p>Appends the package routes to your application's <code>routes/web.php</code> file. Note: Routes are automatically loaded by the service provider by default, so this command is only needed if you've manually removed the route loading.</p>
+            </section>
+
+            <!-- Troubleshooting Section -->
+            <section id="troubleshooting" class="section">
+                <h2>❓ Troubleshooting</h2>
+
+                <h3>No chunks indexed</h3>
+                <ul>
+                    <li>Ensure <code>.md</code> files exist in <code>public/{markdown_info_path}/</code></li>
+                    <li>Check file permissions on the knowledge-base directory</li>
+                    <li>Run with <code>--clear</code> flag if you want to re-index</li>
+                </ul>
+
+                <h3>AI returns empty responses</h3>
+                <ul>
+                    <li>Verify your API key is set in <code>.env</code></li>
+                    <li>Check <code>laravel/ai</code> configuration in <code>config/ai.php</code></li>
+                    <li>Ensure embeddings were generated successfully during indexing</li>
+                </ul>
+
+                <h3>Chat interface not loading</h3>
+                <ul>
+                    <li>Ensure Livewire is installed and properly configured</li>
+                    <li>Check that <code>@livewireStyles</code> and <code>@livewireScripts</code> are included in your layout</li>
+                    <li>Verify the user is authenticated (routes require <code>auth</code> middleware)</li>
+                </ul>
+
+                <h3>Visualization page is empty</h3>
+                <ul>
+                    <li>Run <code>php artisan markdownrag:index</code> to populate chunks</li>
+                    <li>Check that <code>knowledge_chunks</code> table has records with valid embeddings</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">ℹ️</div>
+                    <div class="callout-content">
+                        <p><strong>Need more help?</strong> Check the <a href="https://github.com/nomanur/laravel-markdown-rag/issues" target="_blank" style="color: var(--primary);">GitHub Issues</a> or create a new issue for support.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Laravel <span>Markdown RAG</span></h3>
+                <p>Transform Markdown files into an AI-powered knowledge base with vector embeddings, semantic search, and intelligent chat interfaces built on Laravel.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Documentation</h4>
+                <a href="#overview">Overview</a>
+                <a href="#installation">Installation</a>
+                <a href="#configuration">Configuration</a>
+                <a href="#architecture">Architecture</a>
+            </div>
+            <div class="footer-links">
+                <h4>Features</h4>
+                <a href="#indexing">Indexing</a>
+                <a href="#chat">Chat Interface</a>
+                <a href="#visualization">Visualization</a>
+                <a href="#services">Services</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="https://github.com/nomanur/laravel-markdown-rag" target="_blank">GitHub</a>
+                <a href="https://github.com/nomanur/laravel-markdown-rag/issues" target="_blank">Issues</a>
+                <a href="https://laravel.com" target="_blank">Laravel</a>
+                <a href="https://livewire.laravel.com" target="_blank">Livewire</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Built with ❤️ by <a href="https://github.com/nomanur" target="_blank" style="color: var(--primary); text-decoration: none;">Nomanur Rahman</a> · Licensed under MIT</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <script>
+        // Scroll to top button visibility
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        // Active sidebar link tracking
+        const sections = document.querySelectorAll('.section');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                    const activeLink = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Copy code function
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('pre code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
