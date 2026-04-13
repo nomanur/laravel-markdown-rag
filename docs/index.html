@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel Markdown RAG - Documentation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,6 +38,65 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
             --radius: 8px;
             --radius-lg: 12px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-code: #0b1120;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-light: #64748b;
+            --border: #1e293b;
+            --border-light: #334155;
+            --secondary: #ffffff;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle .sun-icon { display: none; }
+        .theme-toggle .moon-icon { display: block; }
+
+        [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
+        [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
+
+        [data-theme="dark"] .header { background: rgba(15, 23, 42, 0.9); }
+        [data-theme="dark"] .feature-card { background: var(--bg-secondary); }
+        [data-theme="dark"] .hero-badge { background: var(--bg-secondary); }
+        [data-theme="dark"] .badge { background: var(--bg-secondary); }
+        [data-theme="dark"] .btn-secondary { background: var(--bg-secondary); }
+        [data-theme="dark"] .response-example pre { background: var(--bg-code); }
+        [data-theme="dark"] .sidebar-link:hover { background: rgba(255, 255, 255, 0.05); }
+
+        body, .header, .sidebar, .feature-card, .callout, .response-example, pre, table, th, td, .footer, .btn, .sidebar-link {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s;
         }
 
         * {
@@ -886,6 +951,14 @@
                     </svg>
                     GitHub
                 </a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364-6.364l.707-.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
             </nav>
             <button class="mobile-menu-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1849,6 +1922,16 @@ php artisan markdownrag:route</code></pre>
                 }, 2000);
             });
         }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
     </script>
 </body>
 </html>
