@@ -107,11 +107,18 @@ Index your markdown files to make them searchable:
 php artisan markdownrag:index
 ```
 
-### 4. Accessing the Interface
+### 4. Start Queue Worker
+Start the queue worker to process background jobs:
+
+```bash
+php artisan queue:work
+```
+
+### 5. Accessing the Interface
 You can access the chat interface at the following URL:
 `your-domain.com/markdownrag`
 
-### 5. Customizing Message History
+### 6. Customizing Message History
 By default, `KnowledgeAgent` retrieves messages from the `History` model. You can customize how messages are resolved using one of the following options:
 
 #### Option 1: Global override in `AppServiceProvider`
@@ -161,7 +168,7 @@ class ExtendedKnowledgeAgent extends KnowledgeAgent
 }
 ```
 
-### 6. Customizing Instructions
+### 7. Customizing Instructions
 By default, `KnowledgeAgent` retrieves its instructions from the associated document's `system_prompt` or falls back to a default prompt. You can customize the agent's instructions using one of the following options:
 
 #### Option 1: Global override in `AppServiceProvider`
@@ -195,7 +202,7 @@ class ExtendedKnowledgeAgent extends KnowledgeAgent
 }
 ```
 
-### 7. Customizing Tool Descriptions
+### 8. Customizing Tool Descriptions
 You can also override the description of the `KnowledgeSearchTool` globally. This is useful if you want to give the AI more specific instructions about when to use the search tool:
 
 ```php
