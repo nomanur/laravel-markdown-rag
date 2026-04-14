@@ -1300,6 +1300,10 @@ AI_PROMPT_REWRITING=false</code></pre>
                         <div class="flow-number">5</div>
                         <div class="flow-text">Chunks + embeddings stored in <code>knowledge_chunks</code> table; metadata in <code>knowledge_documents</code></div>
                     </div>
+                    <div class="flow-item">
+                        <div class="flow-number">6</div>
+                        <div class="flow-text">Start queue worker: <code>php artisan queue:work</code> to process background jobs</div>
+                    </div>
                 </div>
 
                 <h3>Phase 2: Chat</h3>
@@ -1403,7 +1407,8 @@ AI_PROMPT_REWRITING=false</code></pre>
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     </div>
                     <pre class="with-header"><code>php artisan markdownrag:index          # Index all .md files
-php artisan markdownrag:index --clear  # Clear existing chunks first</code></pre>
+php artisan markdownrag:index --clear  # Clear existing chunks first
+php artisan queue:work                 # Start queue worker for background jobs</code></pre>
                 </div>
 
                 <h3>TextSplitter Strategy</h3>
@@ -1782,6 +1787,9 @@ php artisan markdownrag:index
 # Clear existing chunks before indexing
 php artisan markdownrag:index --clear
 
+# Start queue worker for background jobs
+php artisan queue:work
+
 # Append package routes to your routes/web.php (optional)
 php artisan markdownrag:route</code></pre>
                 </div>
@@ -1822,6 +1830,14 @@ php artisan markdownrag:route</code></pre>
                 <ul>
                     <li>Run <code>php artisan markdownrag:index</code> to populate chunks</li>
                     <li>Check that <code>knowledge_chunks</code> table has records with valid embeddings</li>
+                </ul>
+
+                <h3>Queue jobs not processing</h3>
+                <ul>
+                    <li>Ensure the queue worker is running: <code>php artisan queue:work</code></li>
+                    <li>Check your <code>QUEUE_CONNECTION</code> setting in <code>.env</code> (use <code>database</code>, <code>redis</code>, or <code>sync</code>)</li>
+                    <li>For development, you can set <code>QUEUE_CONNECTION=sync</code> to process jobs immediately</li>
+                    <li>Monitor queue worker logs for errors: <code>php artisan queue:listen</code></li>
                 </ul>
 
                 <div class="callout callout-info">
